@@ -1,0 +1,18 @@
+{
+    "name": "will-evil/heap",
+    "description": "Heap",
+    "authors": [
+        {
+            "name": "Alexey Konovalenko",
+            "email": "akonovalenko161@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "WillEvil\\": "src/"
+        }
+    }
+}
