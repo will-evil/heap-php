@@ -40,7 +40,7 @@ array sort()
 ````
 array toArray()
 ````
-#### Is empty
+##### Is empty
 ````
 bool isEmpty()
 ````
