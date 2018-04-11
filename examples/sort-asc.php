@@ -4,7 +4,7 @@ require '../vendor/autoload.php';
 
 use WillEvil\Heap;
 
-class MaxHeap extends Heap
+class MinHeap extends Heap
 {
     /**
      * MaxHeap constructor.
@@ -13,7 +13,7 @@ class MaxHeap extends Heap
      */
     public function __construct(array $arr = [])
     {
-        parent::__construct($arr, true);
+        parent::__construct($arr, false);
     }
 
     /**
@@ -30,9 +30,6 @@ class MaxHeap extends Heap
 
 $arr = [45, 78, 12, 1, 45, 69];
 
-$maxHeap = new MaxHeap($arr);
+$maxHeap = new MinHeap($arr);
 
 print_r($maxHeap->sort());
-
-
-

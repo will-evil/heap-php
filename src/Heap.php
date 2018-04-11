@@ -76,12 +76,47 @@ abstract class Heap
     {
         $this->checkEmpty();
 
-        $index = $this->shiftDown(key($this->heap));
+        return $this->extract(key($this->heap));
+    }
+
+    /**
+     * @param int $index
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function extract(int $index)
+    {
+        $index = $this->shiftDown($index);
 
         $value = $this->heap[$index];
-        unset($this->heap[$index]);
+
+        $rightIndex = $this->moveToRightPosition($index);
+        unset($this->heap[$rightIndex]);
 
         return $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function sort(): array
+    {
+        $sortArr = [];
+        $copyHeap = $this->heap;
+
+        try {
+            while (false === $this->isEmpty()) {
+                $sortArr[] = $this->extractTop();
+            }
+        } catch (\Exception $e) {
+            $sortArr = [];
+        }
+
+        $this->heap = $copyHeap;
+
+        return $sortArr;
     }
 
     /**
@@ -135,6 +170,7 @@ abstract class Heap
     private function shiftDown(int $index): int
     {
         $childIndex = $this->getBestChildIndex($index);
+
         if ($childIndex !== 0) {
             $this->swap($index, $childIndex);
 
@@ -148,9 +184,13 @@ abstract class Heap
      * @param int $childIndex
      *
      * @return int
+     *
+     * @throws \Exception
      */
     private function getParentIndex(int $childIndex): int
     {
+        $this->checkIndexExistence($childIndex);
+
         return (int) floor($childIndex / 2);
     }
 
@@ -158,12 +198,19 @@ abstract class Heap
      * @param int $parentIndex
      *
      * @return array
+     *
+     * @throws \Exception
      */
     private function getChildrenIndexes(int $parentIndex): array
     {
+        $this->checkIndexExistence($parentIndex);
+
         $product = 2 * $parentIndex;
         $indexLeft = $product + 1;
         $indexRight = $product + 2;
+
+        $indexLeft = isset($this->heap[$indexLeft]) ? $indexLeft : 0;
+        $indexRight = isset($this->heap[$indexRight]) ? $indexRight : 0;
 
         return [
             $indexLeft,
@@ -175,17 +222,19 @@ abstract class Heap
      * @param int $parentIndex
      *
      * @return int
+     *
+     * @throws \Exception
      */
     private function getBestChildIndex(int $parentIndex): int
     {
         list($indexLeft, $indexRight) = $this->getChildrenIndexes($parentIndex);
 
-        if (!isset($this->heap[$indexLeft]) && $this->heap[$indexRight]) {
+        if (0 === $indexLeft && 0 === $indexRight) {
             return 0;
         }
 
-        if (!isset($this->heap[$indexLeft]) || $this->heap[$indexRight]) {
-            return isset($this->heap[$indexLeft]) ? $indexLeft : $indexRight;
+        if (0 === $indexLeft || 0 === $indexRight) {
+            return $indexLeft !== 0 ? $indexLeft : $indexRight;
         }
 
         $leftVal = $this->heap[$indexLeft];
@@ -195,16 +244,6 @@ abstract class Heap
         $res = true === $this->maxHeap ? $res : !$res;
 
         return $res ? $indexLeft : $indexRight;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function checkEmpty()
-    {
-        if ($this->isEmpty()) {
-            throw new \Exception('Heap is empty');
-        }
     }
 
     /**
@@ -223,6 +262,27 @@ abstract class Heap
     }
 
     /**
+     * @param int $index
+     *
+     * @return int
+     *
+     * @throws \Exception
+     */
+    private function moveToRightPosition(int $index): int
+    {
+        $this->checkIndexExistence($index);
+
+        $rightIndex = $this->count() - 1;
+
+        if ($index !== $rightIndex) {
+            $this->swap($index, $rightIndex);
+            $this->shiftUp($index);
+        }
+
+        return $rightIndex;
+    }
+
+    /**
      * @param array $arr
      *
      * @return int
@@ -234,6 +294,28 @@ abstract class Heap
         }
 
         return $this->count();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function checkEmpty()
+    {
+        if ($this->isEmpty()) {
+            throw new \Exception('Heap is empty');
+        }
+    }
+
+    /**
+     * @param int $index
+     *
+     * @throws \Exception
+     */
+    private function checkIndexExistence(int $index)
+    {
+        if (!isset($this->heap[$index])) {
+            throw new \Exception('Index ' . $index . ' not exists in heap');
+        }
     }
 
     /**
