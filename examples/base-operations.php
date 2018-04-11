@@ -59,11 +59,21 @@ try {
 }
 
 /*
+ * Extracts by index
+ */
+try {
+    echo 'Extract by index: ', $maxHeap->extract(2), "\n";
+    print_r($maxHeap->toArray());
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+
+/*
  * Count
  */
 echo 'Count: ', $maxHeap->count(), "\n";
 
-/**
+/*
  * Insert
  */
 $item = 35;
@@ -75,4 +85,17 @@ $item = 85;
 echo 'Insert Item=', $item, "\n";
 $maxHeap->insert($item);
 print_r($maxHeap->toArray());
+
+/*
+ * Sort.
+ * If was created max heap, will implement DESC sort.
+ * If was created min heap, will implement ASC sort.
+ */
+echo 'DESC Sort:', "\n";
+print_r($maxHeap->sort());
+
+/*
+ * Is Empty. Get true if heap is empty.
+ */
+echo 'Heap is empty: ', (int) $maxHeap->isEmpty(), "\n";
 

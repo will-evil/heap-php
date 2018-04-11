@@ -191,7 +191,11 @@ abstract class Heap
     {
         $this->checkIndexExistence($childIndex);
 
-        return (int) floor($childIndex / 2);
+        if (0 === $childIndex) {
+            return 0;
+        }
+
+        return (int) floor(($childIndex - 1) / 2);
     }
 
     /**
